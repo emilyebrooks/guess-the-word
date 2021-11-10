@@ -1,121 +1,57 @@
-// Targeting the unordered list where guessed letters appear
-const guessedLettersElement = document.querySelector(".guessed-letters");
+//2.1 Select unordered list where guessed letters will appear
+const guessedLetters = document.querySelector(".guessed-letters");
+// console.log(guessedLetters); 
 
-// Targeting the "Guess!" button
-const guessLetterButton = document.querySelector(".guess");
+//2.2 Select Guess! button
+const guessButton = document.querySelector(".guess");
+// console.log(guessButton); 
 
-// Targeting the input where the player enters their guess
-const letterInput = document.querySelector(".letter");
+//2.3 Select input box where player enters guessed letter
+const guessBox = document.querySelector(".letter");
+// console.log(guessBox); 
 
-// Targeting the empty paragraph where the word in progress appears
-const wordInProgress = document.querySelector(".word-in-progress");
+//2.4 Select empty p where word in progress will appear
+const wordInProgress = document.querySelector(".word-in-progress"); 
+// console.log(wordInProgress); 
 
-//Targeting the paragraph where remaining guesses displays
-const remainingGuessesElement = document.querySelector(".remaining");
+//2.5 Select p where remaining guesses will display
+const remainingGuesses = document.querySelector(".remaining");
+// console.log(remainingGuesses); 
 
-//Targeting the span inside the paragraph where remaining guesses display
-const remainingGuessesSpan = document.querySelector(".remaining span");
+//2.6 Select span inside the p where the remaining guesses will display
+const numGuessesRemaining = document.querySelector(".remaining span");
+// console.log(numGuessesRemaining); 
 
-//Targeting messages after guesses
-const message = document.querySelector(".message");
+//2.7 Select empty p where messages will appear when player guesses a letter
+const message = document.querySelector(".message"); 
+// console.log(message); 
 
-//Targeting hidden "Play Again" button
+//2.8 Select hidden button that will appear prompting player to play again
 const playAgainButton = document.querySelector(".play-again");
+// console.log(playAgainButton); 
 
-const word = "magnolia"; //Default word if fetch request fails
+//3 Create global var with starting word to test game until fetching from API
+const word = "magnolia"; 
+// console.log(word); 
 
-const guessedLetters = [];
+//WRITE A FUNCTION TO ADD PLACEHOLDERS FOR EACH LETTER
 
-// Display circle symbols as placeholders for the words letters
 const placeholder = function (word) {
-const placeholderLetters = []; 
-for (const letter of word) {
-    console.log(letter);
-    placeholderLetters.push("●");
-}
-wordInProgress.innerText = placeholderLetters.join("");
+    const placeholderLetters = []; 
+    for (const letter of word) {
+        console.log(letter); 
+        placeholderLetters.push("●");
+    }
+    wordInProgress.innerText= placeholderLetters.join(""); 
 };
+//Call the function and pass the word variable as an argument. 
+//use an array and then join it back to a string using .join("") method.
 
-placeholder(word); 
-    
-guessLetterButton.addEventListener("click", function (e) {
-    e.preventDefault();
-    // Empty message paragraph
-    message.innerText = "";
-    // Grab what was entered in the input
-    const guess = letterInput.value;
-    // console.log(guess); 
-    // Make sure input is a single letter
-    const goodGuess = validateInput(guess); 
+placeholder(word);  
 
-    if (goodGuess) {
-        makeGuess(guess); 
-    }
-    letterInput.value = ""; 
-});
- 
-const validateInput = function(input) {
-    const acceptedLetter = /[a-zA-Z]/;
-    if (input.length === 0) {
-        // Is the input empty?
-        message.innerText = "Please enter a letter.";
-    } else if (input.length > 1) {
-        // Did user enter more than one letter?
-        message.innerText = "Please enter a single letter.";
-    } else if (!input.match(acceptedLetter)) {
-        // Did user enter something other than a letter?
-        message.innerText = "Please enter a letter from A to Z.";
-    } else {
-        // Single letter was entered
-        return input; 
-    }
-    };
-
-    const makeGuess = function (guess) {
-        guess = guess.toUpperCase(); 
-        if (guessedLetters.includes(guess)) {
-            message.innerText = "You already guessed that letter, silly. Try again.";
-        }
-        else { 
-            guessedLetters.push(guess); 
-            console.log(guessedLetters);
-            showGuessedLetters(); 
-            updateWordInProgress(guessedLetters); 
-        }
-    };
-
-    const showGuessedLetters = function () {
-        //Clear the list first
-        guessedLettersElement.innerHTML = "";
-        for (const letter of guessedLetters) {
-        const li = document.createElement("li"); 
-        li.innerText = letter;
-        guessedLettersElement.append(li);
-    }
-};
-
-const updateWordInProgress = function(guessedLetters) {
-    const wordUpper = word.toUpperCase(); 
-    const wordArray = wordUpper.split(""); 
-    // console.log(wordArray); //This didn't seem to do anything. what should it have done?
-    const revealWord = []; 
-    for (const letter of wordArray) {
-        if (guessedLetters.includes(letter)) {
-            revealWord.push(letter.toUpperCase());
-        } else {
-            revealWord.push("●");
-        }
-        }
-
-        // console.log(revealWord); //this also did nothing. what should it have done?
-        wordInProgress.innerText = revealWord.join("");
-        checkIfWin();
-    };
-
-    const checkIfWin = function () {
-        if (word.toUpperCase() === wordInProgress.innerText) {
-            message.classList.add("win");
-            message.innerHTML = '<p class="highlight">You guessed the correct word! Congrats!</p>';
-        }
-    };
-
+guessButton.addEventListener("click", function(e) {
+    e.preventDefault(); 
+    const inputValue = guessBox.value;  
+    console.log(inputValue); 
+        guessBox.value=""; 
+}); 

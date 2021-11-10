@@ -89,5 +89,44 @@ const makeGuess = function (guess) {
     } else {
         guessedLetters.push(guess); 
         console.log(guessedLetters); 
+        showGuessedLetters(); //call the guessed letters funtion so letter displays when it hasn't been called before. 
+        updateWordInProgress(guessedLetters);  
     }
 }; 
+
+//Create and name a function to update the page with the letters as player guesses
+const showGuessedLetters = function () {
+    //clear the list first
+    guessedLettersElement.innerHTML = ""; 
+    for (const letter of guessedLetters) {
+        const li = document.createElement("li"); //create new li items for each letter in the guessedLetters array
+        li.innerText = letter; 
+        guessedLettersElement.append(li); 
+    }
+};
+
+//Create and name a function to update the WIP that accepts the guessedLetters array as a parmeter. 
+//This will replace the cirlce symbols with the correct letters guessed
+const updateWordInProgress = function (guessedLetters) {
+    const wordUpper = word.toUpperCase(); 
+    const wordArray = wordUpper.split(""); 
+    const revealWord = []; 
+    for (const letter of wordArray) {
+     if (guessedLetters.includes(letter)) {
+         revealWord.push(letter.toUpperCase()); 
+     } else {
+         revealWord.push("●"); 
+     }
+}
+console.log(revealWord); 
+wordInProgress.innerText = revealWord.join(""); 
+checkIfWin(); 
+}; 
+
+const checkIfWin = function () {
+    if (word.toUpperCase() === wordInProgress.innerText) {
+        message.classList.add("win"); 
+        message.innerHTML = `<p class="highlight">You guessed the correct word! Congrats!</p>`;
+    }
+}; 
+

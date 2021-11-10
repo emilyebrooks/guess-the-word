@@ -31,23 +31,36 @@ const playAgainButton = document.querySelector(".play-again");
 // console.log(playAgainButton); 
 
 //3 Create global var with starting word to test game until fetching from API
-const word = "magnolia"; 
+let word = "magnolia"; 
 // console.log(word); 
 
 const guessedLetters = []; 
 
-//WRITE A FUNCTION TO DISPLAY ● AS PLACEHOLDERS FOR EACH LETTER
+//Declare global variable to set max # of guesses allowed
+let remainingGuesses = 8; 
 
+//Add an async function to fetch data 
+const getWord = async function () {
+    const response = await fetch("https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt");
+    const words = await response.text(); 
+    const wordArray = words.split("\n"); 
+    const randomIndex = Math.floor(Math.random() * wordArray.length); 
+    word = wordArray[randomIndex].trim(); 
+    placeholder(word); 
+};
+
+getWord(); 
+
+//Declare a function to display ● as placeholders for each letter
 const placeholder = function (word) {
     const placeholderLetters = []; 
     for (const letter of word) {
-        console.log(letter); 
+        // console.log(letter); 
         placeholderLetters.push("●");
     }
     wordInProgress.innerText= placeholderLetters.join(""); 
-};
+}; 
 
-placeholder(word);  
 
 guessLetterButton.addEventListener("click", function(e) {
     e.preventDefault(); 
@@ -89,6 +102,7 @@ const makeGuess = function (guess) {
     } else {
         guessedLetters.push(guess); 
         console.log(guessedLetters); 
+        updateGuessesRemaining(guess); 
         showGuessedLetters(); //call the guessed letters funtion so letter displays when it hasn't been called before. 
         updateWordInProgress(guessedLetters);  
     }
@@ -105,6 +119,7 @@ const showGuessedLetters = function () {
     }
 };
 
+
 //Create and name a function to update the WIP that accepts the guessedLetters array as a parmeter. 
 //This will replace the cirlce symbols with the correct letters guessed
 const updateWordInProgress = function (guessedLetters) {
@@ -118,10 +133,31 @@ const updateWordInProgress = function (guessedLetters) {
          revealWord.push("●"); 
      }
 }
-console.log(revealWord); 
+// console.log(revealWord); 
 wordInProgress.innerText = revealWord.join(""); 
 checkIfWin(); 
 }; 
+
+//Create and name a function to accept guess as parameter
+const updateGuessesRemaining = function (guess) {
+    const upperWord = word.toUpperCase(); 
+    if (!upperWord.includes(guess)) {
+        //bad guess, lose a chance
+        message.innerText = `Sorry, the word has no ${guess}.`;
+        remainingGuesses -= 1; 
+    } else {
+        message.innerText = `Good guess! The word has the letter ${guess}!`; 
+    }
+
+    if (remainingGuesses === 0) {
+        message.innerHTML = `Game over! The word was <span class="highlight">${word}</span>.`; 
+     } else if (remainingGuesses === 1) {
+            remainingGuessesSpan.innerText = `${remainingGuesses} guess`;
+        } else {
+            remainingGuessesSpan.innerText = `${remainingGuesses} guesses`; 
+        }
+    };
+
 
 const checkIfWin = function () {
     if (word.toUpperCase() === wordInProgress.innerText) {
@@ -129,4 +165,5 @@ const checkIfWin = function () {
         message.innerHTML = `<p class="highlight">You guessed the correct word! Congrats!</p>`;
     }
 }; 
+
 
